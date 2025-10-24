@@ -48,14 +48,16 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    is_verified: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-userSchema.index({ email: 1 });
-userSchema.index({ phone: 1 });
 
 
 export const User = mongoose.model("User", userSchema);

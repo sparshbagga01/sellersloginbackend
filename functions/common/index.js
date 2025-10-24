@@ -13,3 +13,16 @@ export const hashedPassword = async (password) => {
 export const comparePassword = async (plainPassword, hashedPassword) => {
   return await bcrypt.compare(plainPassword, hashedPassword);
 };
+
+
+export const generateOtp = (length = 6) => {
+  let otp = '';
+  for (let i = 0; i < length; i++) {
+    otp += Math.floor(Math.random() * 10);
+  }
+  return otp;
+};
+
+
+// const pagal = await  hashedPassword("pankajverma")
+// console.log("Hashed Password:", pagal);

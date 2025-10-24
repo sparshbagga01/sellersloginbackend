@@ -53,7 +53,7 @@ app.get("/", (req, res) => {
   res.send("Hello, Pankaj said hi :)");
 });
 
-// app.use("/api", router);
+app.use("/api", router);
 
 
 

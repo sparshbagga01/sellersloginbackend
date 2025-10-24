@@ -23,6 +23,7 @@ export const createAdminUser = async () => {
       role: "admin",
       is_active: true,
       city: "Mumbai",
+      is_verified: true,
       state: "Maharashtra",
       country: "India",
     });

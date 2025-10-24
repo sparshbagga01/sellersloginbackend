@@ -53,10 +53,5 @@ const vendorSchema = new mongoose.Schema(
   }
 );
 
-// Optional indexes for faster lookup
-vendorSchema.index({ email: 1 });
-vendorSchema.index({ phone: 1 });
-vendorSchema.index({ gst_number: 1 });
-vendorSchema.index({ pan_number: 1 });
 
 export const Vendor = mongoose.model("Vendor", vendorSchema);

@@ -1,6 +1,7 @@
 import express from "express";
 import { verifyAdmin, verifyToken } from "../../services/jwt/index.js";
-import { deleteVendor, getAdminDashboard, getAdminProfile, getAllVendors, getUnverifiedVendors, getVendorDetailsById, getVerifiedVendors, loginAdmin, rejectVendor, verifyVendor } from "../../controllers/admin.controller.js";
+import { deleteVendor, getAdminProfile, getAllVendors, getUnverifiedVendors, getVendorDetailsById, getVerifiedVendors, loginAdmin, rejectVendor, verifyVendor } from "../../controllers/admin/admin.controller.js";
+
 
 
 
@@ -13,7 +14,7 @@ router.use(verifyToken, verifyAdmin);
 router.get("/profile", getAdminProfile);
 
 router.get("/vendors", getAllVendors);
-router.get("/dashboard", getAdminDashboard);
+
 // Get verified vendors
 router.get("/vendors/verified", getVerifiedVendors);
 

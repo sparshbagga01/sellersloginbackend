@@ -9,9 +9,10 @@ const vendorUploadPath = path.join(process.cwd(), "uploads", "vendor");
 const csvUploadPath = path.join(process.cwd(), "uploads", "csv");
 
 // Ensure all folders exist
-[productUploadPath, categoryUploadPath, csvUploadPath].forEach((dir) => {
+[productUploadPath, categoryUploadPath, vendorUploadPath, csvUploadPath].forEach((dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
+
 
 // Shared file filter for images/videos
 const fileFilter = (req, file, cb) => {
@@ -88,7 +89,7 @@ export const uploadProductMedia = multer({
 });
 
 export const uploadCategoryImage = multer({
-  storage: categoryStorage, // ✅ uses the correct category path
+  storage: categoryStorage,
   fileFilter,
 });
 

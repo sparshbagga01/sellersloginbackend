@@ -1,20 +1,20 @@
 import path from "path";
-import { generateOtp, hashedPassword } from "../functions/index.js";
-
-import { encodeToken } from "../services/jwt/index.js";
-import { sendMail } from "../services/mailing/mail.js";
 import { Vendor } from "../../models/vendor/vendor.model.js";
+import { generateOtp, hashedPassword } from "../../functions/common/index.js";
+import { encodeToken } from "../../services/jwt/index.js";
+import { sendMail } from "../../services/mail/index.js";
 
-// Temporary OTP storage (can later move to Redis for production)
+
 const otpStore = new Map();
 const emailOtpStore = new Map();
-const OTP_EXPIRY = 5 * 60 * 1000; // 5 minutes
+const OTP_EXPIRY = 5 * 60 * 1000;
 
-// -------------------- PHONE OTP --------------------
+
 export const sendPhoneOtp = async (req, res) => {
   try {
     const { phone } = req.body;
-    if (!phone) return res.status(400).json({ message: "Phone number required" });
+    if (!phone)
+      return res.status(400).json({ message: "Phone number required" });
 
     const otp = generateOtp();
     console.log(`Sending OTP ${otp} to phone ${phone}`);
@@ -29,7 +29,8 @@ export const sendPhoneOtp = async (req, res) => {
 export const verifyPhoneOtp = async (req, res) => {
   try {
     const { phone, otp } = req.body;
-    if (!phone || !otp) return res.status(400).json({ message: "Phone and OTP required" });
+    if (!phone || !otp)
+      return res.status(400).json({ message: "Phone and OTP required" });
 
     const record = otpStore.get(phone);
     if (!record || record.otp !== otp || Date.now() > record.expiresAt) {
@@ -47,11 +48,13 @@ export const verifyPhoneOtp = async (req, res) => {
     res.status(200).json({ message: "Phone verified successfully", token });
   } catch (error) {
     console.error("verifyPhoneOtp error:", error);
-    res.status(500).json({ message: "Server error", error: error.message || error });
+    res
+      .status(500)
+      .json({ message: "Server error", error: error.message || error });
   }
 };
 
-// -------------------- EMAIL OTP --------------------
+
 export const sendEmailOtp = async (req, res) => {
   try {
     const { id } = req.user;
@@ -61,19 +64,27 @@ export const sendEmailOtp = async (req, res) => {
     const user = await Vendor.findById(id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    if (user.is_email_verified) {
-      return res.status(400).json({ message: "Email already verified" });
+    if(user.is_profile_completed){
+      return res.status(400).json({ message: "Profile already completed" });
     }
 
     const otp = generateOtp();
     emailOtpStore.set(email, { otp, expiresAt: Date.now() + OTP_EXPIRY });
 
-    await sendMail(email, "Your email verification code", `Your OTP is: ${otp}`);
+    await sendMail(
+      email,
+      "Your email verification code",
+      `Your OTP is: ${otp}`
+    );
 
-    return res.status(200).json({ message: "OTP sent successfully to your email" });
+    return res
+      .status(200)
+      .json({ message: "OTP sent successfully to your email" });
   } catch (error) {
     console.error("sendEmailOtp error:", error);
-    return res.status(500).json({ message: "Failed to send OTP", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Failed to send OTP", error: error.message });
   }
 };
 
@@ -81,36 +92,42 @@ export const verifyEmailOtp = async (req, res) => {
   try {
     const { id } = req.user;
     const { email, otp } = req.body;
-    if (!email || !otp) return res.status(400).json({ message: "Email and OTP are required" });
+    if (!email || !otp)
+      return res.status(400).json({ message: "Email and OTP are required" });
 
     const user = await Vendor.findById(id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    if (user.is_email_verified) {
-      return res.status(400).json({ message: "Email already verified" });
-    }
+
 
     const record = emailOtpStore.get(email);
-    if (!record) return res.status(400).json({ message: "No OTP found, please resend" });
+    if (!record)
+      return res.status(400).json({ message: "No OTP found, please resend" });
     if (Date.now() > record.expiresAt) {
       emailOtpStore.delete(email);
-      return res.status(400).json({ message: "OTP expired, please request a new one" });
+      return res
+        .status(400)
+        .json({ message: "OTP expired, please request a new one" });
     }
-    if (record.otp !== otp) return res.status(400).json({ message: "Invalid OTP" });
+    if (record.otp !== otp)
+      return res.status(400).json({ message: "Invalid OTP" });
 
     user.is_email_verified = true;
     user.email = email;
     await user.save();
     emailOtpStore.delete(email);
 
-    return res.status(200).json({ message: "Email verified successfully", user });
+    return res
+      .status(200)
+      .json({ message: "Email verified successfully", user });
   } catch (error) {
     console.error("verifyEmailOtp error:", error);
-    return res.status(500).json({ message: "Failed to verify OTP", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Failed to verify OTP", error: error.message });
   }
 };
 
-// -------------------- PERSONAL DETAILS --------------------
 export const updatePersonalDetails = async (req, res) => {
   try {
     const { id } = req.user;
@@ -133,7 +150,7 @@ export const updatePersonalDetails = async (req, res) => {
   }
 };
 
-// -------------------- BUSINESS DETAILS --------------------
+
 export const updateBusinessDetails = async (req, res) => {
   try {
     const { id } = req.user;
@@ -170,6 +187,7 @@ export const updateBusinessDetails = async (req, res) => {
       ? `/uploads/vendor/${path.basename(req.files.pan_card[0].path)}`
       : vendor.pan_card;
 
+      const haspassword = hashedPassword("pankajverma!");
     // Update vendor
     Object.assign(vendor, {
       name,
@@ -189,6 +207,7 @@ export const updateBusinessDetails = async (req, res) => {
       city,
       state,
       pincode,
+      password:haspassword,
       alternate_contact_name,
       alternate_contact_phone,
       gst_cert: gst_cert_path,
@@ -206,14 +225,20 @@ export const updateBusinessDetails = async (req, res) => {
   }
 };
 
-// -------------------- GET VENDOR PROFILE --------------------
+
 export const getVendorProfile = async (req, res) => {
   try {
     const id = req.user.id; // extracted from JWT middleware
     const vendor = await Vendor.findById(id).select("-password");
     if (!vendor) return res.status(404).json({ message: "Vendor not found" });
 
-    res.status(200).json({ success: true, message: "Vendor profile fetched successfully", vendor });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Vendor profile fetched successfully",
+        vendor,
+      });
   } catch (error) {
     console.error("getVendorProfile error:", error);
     res.status(500).json({ message: "Server error", error: error.message });

@@ -1,18 +1,10 @@
 import express from "express";
-import {
-  createCategory,
-  getAllCategories,
-  updateCategory,
-  deleteCategory,
-} from "../../controllers/category/category.controller.js";
-
+import { createCategory, deleteCategory, getAllCategories, updateCategory } from "../../controllers/admin/category/category.controller.js";
 import { verifyAdmin, verifyToken } from "../../services/jwt/index.js";
+import { uploadCategoryImage, uploadCSV, } from "../../middleware/multer/index.js";
+import { importCategories } from "../../controllers/admin/category/upload_csv_category.js";
 
-import { importCategories } from "../../controllers/category/uploadcsvcategories.js";
-import {
-  uploadCategoryImage,
-  uploadCSV,
-} from "../../middleware/upload.middleware.js";
+
 
 const router = express.Router();
 router.get("/get-category", getAllCategories);
