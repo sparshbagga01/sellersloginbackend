@@ -1,8 +1,8 @@
 import express from "express";
-import { createSubCategory, deleteSubCategory, getAllSubCategories, getSubCategoriesByCategory, updateSubCategory } from "../../controllers/category/subcategory.controller.js";
-import { uploadSubCategoryImage } from "../../middleware/uploadSubCategoryImage.js";
-import { importSubCategories } from "../../controllers/category/subCategoryImportController.js";
-import { uploadCSV } from "../../middleware/upload.middleware.js";
+import { createSubCategory, deleteSubCategory, getAllSubCategories, getSubCategoriesByCategory, updateSubCategory } from "../../controllers/admin/category/subcategory.controller.js";
+import { uploadCSV, uploadSubCategoryImage } from "../../middleware/multer/index.js";
+import { importSubCategories } from "../../controllers/admin/category/upload_csv_subcategory.js";
+
 
 
 const router = express.Router();

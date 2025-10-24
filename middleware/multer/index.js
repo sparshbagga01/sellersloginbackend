@@ -2,20 +2,27 @@ import multer from "multer";
 import fs from "fs";
 import path from "path";
 
-// Define base upload paths
-const productUploadPath = path.join(process.cwd(), "uploads", "products", "category");
-const categoryUploadPath = path.join(process.cwd(), "uploads", "category");
-const vendorUploadPath = path.join(process.cwd(), "uploads", "vendor");
-const csvUploadPath = path.join(process.cwd(), "uploads", "csv");
+// ---------- Utility to Ensure Folder Exists ----------
+const makeDirIfNotExist = (dir) => {
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+};
+
+// ---------- Base Upload Paths ----------
+const uploadPaths = {
+  product: path.join(process.cwd(), "uploads", "products", "category"),
+  category: path.join(process.cwd(), "uploads", "category"),
+  vendor: path.join(process.cwd(), "uploads", "vendor"),
+  csv: path.join(process.cwd(), "uploads", "csv"),
+  subcategory: path.join(process.cwd(), "uploads", "subcategory"),
+  productImages: path.join(process.cwd(), "uploads", "products", "images"),
+  productVideos: path.join(process.cwd(), "uploads", "products", "videos"),
+};
 
 // Ensure all folders exist
-[productUploadPath, categoryUploadPath, vendorUploadPath, csvUploadPath].forEach((dir) => {
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-});
+Object.values(uploadPaths).forEach(makeDirIfNotExist);
 
-
-// Shared file filter for images/videos
-const fileFilter = (req, file, cb) => {
+// ---------- File Filters ----------
+const imageVideoFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image/") || file.mimetype.startsWith("video/")) {
     cb(null, true);
   } else {
@@ -23,105 +30,105 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const pdfFileFilter = (req, file, cb) => {
+const pdfFilter = (req, file, cb) => {
   if (file.mimetype === "application/pdf") {
-    cb(null, true); // Accept the file
+    cb(null, true);
   } else {
-    cb(new Error("Only PDF files are allowed"), false); // Reject others
+    cb(new Error("Only PDF files are allowed"), false);
   }
 };
 
-
-// Storage for product media
-const productStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, productUploadPath),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const safeName = `${file.fieldname}-${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
-    cb(null, safeName);
-  },
-});
-
-// ✅ Storage for category images
-const categoryStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, categoryUploadPath),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const safeName = `${file.fieldname}-${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
-    cb(null, safeName);
-  },
-});
-
-const vendorStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, vendorUploadPath),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const safeName = `${file.fieldname}-${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
-    cb(null, safeName);
-  },
-});
-
-// Storage for CSV files
-const csvStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, csvUploadPath),
-  filename: (req, file, cb) => {
-    const unique = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, unique + path.extname(file.originalname));
-  },
-});
-
-// CSV file filter
-const csvFileFilter = (req, file, cb) => {
-  if (path.extname(file.originalname).toLowerCase() !== ".csv") {
-    return cb(new Error("Only CSV files are allowed!"), false);
+const csvFilter = (req, file, cb) => {
+  if (path.extname(file.originalname).toLowerCase() === ".csv") {
+    cb(null, true);
+  } else {
+    cb(new Error("Only CSV files are allowed"), false);
   }
-  cb(null, true);
 };
 
+const imageFilter = (req, file, cb) => {
+  const allowed = [".jpg", ".jpeg", ".png", ".webp"];
+  const ext = path.extname(file.originalname).toLowerCase();
+  if (allowed.includes(ext)) cb(null, true);
+  else cb(new Error("Only .jpg, .jpeg, .png, .webp files are allowed"), false);
+};
 
+// ---------- Generic Filename Generator ----------
+const uniqueName = (file) => {
+  const ext = path.extname(file.originalname);
+  return `${file.fieldname}-${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+};
 
-export const upload = multer({ storage:vendorStorage, fileFilter:pdfFileFilter });
+// ---------- Storages ----------
+const storages = {
+  product: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadPaths.product),
+    filename: (req, file, cb) => cb(null, uniqueName(file)),
+  }),
+
+  category: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadPaths.category),
+    filename: (req, file, cb) => cb(null, uniqueName(file)),
+  }),
+
+  vendor: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadPaths.vendor),
+    filename: (req, file, cb) => cb(null, uniqueName(file)),
+  }),
+
+  csv: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadPaths.csv),
+    filename: (req, file, cb) => cb(null, uniqueName(file)),
+  }),
+
+  subcategory: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadPaths.subcategory),
+    filename: (req, file, cb) => cb(null, uniqueName(file)),
+  }),
+
+  productMedia: multer.diskStorage({
+    destination: (req, file, cb) => {
+      const dir = file.mimetype.startsWith("image/")
+        ? uploadPaths.productImages
+        : uploadPaths.productVideos;
+      makeDirIfNotExist(dir);
+      cb(null, dir);
+    },
+    filename: (req, file, cb) => cb(null, uniqueName(file)),
+  }),
+};
+
+// ---------- Exported Uploaders ----------
+export const uploadVendorPDF = multer({
+  storage: storages.vendor,
+  fileFilter: pdfFilter,
+});
 
 export const uploadProductMedia = multer({
-  storage: productStorage,
-  fileFilter,
+  storage: storages.product,
+  fileFilter: imageVideoFilter,
   limits: { fileSize: 10 * 1024 * 1024 },
 });
 
 export const uploadCategoryImage = multer({
-  storage: categoryStorage,
-  fileFilter,
+  storage: storages.category,
+  fileFilter: imageVideoFilter,
 });
 
 export const uploadCSV = multer({
-  storage: csvStorage,
-  fileFilter: csvFileFilter,
+  storage: storages.csv,
+  fileFilter: csvFilter,
 });
 
-
-
-
-
-
-// Create upload folders if not exist
-const makeDirIfNotExist = (dir) => {
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-};
-
-// Storage for images & videos
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = file.mimetype.startsWith("image/") 
-      ? "./uploads/products/images" 
-      : "./uploads/products/videos";
-    makeDirIfNotExist(dir);
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + "-" + uniqueSuffix + ext);
-  },
+export const uploadSubCategoryImage = multer({
+  storage: storages.subcategory,
+  fileFilter: imageFilter,
+  limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-export const uploadProduct = multer({ storage });
+export const uploadProduct = multer({
+  storage: storages.productMedia,
+  fileFilter: imageVideoFilter,
+});
+
+console.log("✅ Multer setup initialized successfully");

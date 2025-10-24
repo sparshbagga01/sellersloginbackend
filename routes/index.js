@@ -8,7 +8,7 @@ import categoryRoutes from "./admin/adminCategory.routes.js";
 // import wishlistRoutes from "./user/wishlist.routes.js";
 // import vendorOrderRoutes from "./vendor/vendorOrder.routes.js";
 // import userOrderRoutes from "./user/order.routes.js";
-// import subCategoryRoutes from "./admin/subcategory.routes.js";
+import subCategoryRoutes from "./admin/subcategory.routes.js";
 // import bannerRoutes from "./admin/banner.routes.js";
 
 const router = Router();
@@ -20,7 +20,7 @@ router.use("/vendor", vendorRoutes);
 // router.use("/users", userRoutes);
 router.use("/admin", adminRoutes);
 router.use("/categories",categoryRoutes );
-// router.use("/subcategories", subCategoryRoutes);
+router.use("/subcategories", subCategoryRoutes);
 // router.use("/banners", bannerRoutes);
 // router.use("/cart",cartRoutes );
 // router.use("/wishlist",wishlistRoutes );
