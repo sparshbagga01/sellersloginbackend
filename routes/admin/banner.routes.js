@@ -1,12 +1,7 @@
 import express from "express";
-import {
-  createBanner,
-  getBanners,
-  getBannerById,
-  updateBanner,
-  deleteBanner,
-} from "../controllers/banner.controller.js";
-import { uploadBanner } from "../middleware/upload.js";
+import { createBanner, deleteBanner, getBannerById, getBanners, updateBanner } from "../../controllers/admin/banner.controller.js";
+import { uploadBanner } from "../../middleware/multer/index.js";
+
 
 
 const router = express.Router();

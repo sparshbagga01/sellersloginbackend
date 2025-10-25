@@ -2,7 +2,6 @@ import slugify from "slugify";
 import { Category } from "../../../models/category/category.model.js";
 import { SubCategory } from "../../../models/category/subcategory.js";
 
-
 // ✅ Create SubCategory
 export const createSubCategory = async (req, res) => {
   try {
@@ -26,17 +25,30 @@ export const createSubCategory = async (req, res) => {
     }
 
     // 🔍 Find category by name (case-sensitive or use regex for flexibility)
-    const category = await Category.findOne({ name: category_name, isDeleted: { $ne: true } });
+    const category = await Category.findOne({
+      name: category_name,
+      isDeleted: { $ne: true },
+    });
     if (!category) {
-      return res.status(404).json({ success: false, message: "Category not found." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Category not found." });
     }
 
     const slug = slugify(name.trim(), { lower: true, strict: true });
 
     // 🔁 Check if subcategory already exists (optional but recommended)
-    const existingSub = await SubCategory.findOne({ name: name.trim(), category_id: category._id });
+    const existingSub = await SubCategory.findOne({
+      name: name.trim(),
+      category_id: category._id,
+    });
     if (existingSub) {
-      return res.status(400).json({ success: false, message: "Subcategory already exists in this category." });
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Subcategory already exists in this category.",
+        });
     }
 
     const subCategory = await SubCategory.create({
@@ -85,7 +97,7 @@ export const getAllSubCategories = async (req, res) => {
       .exec();
 
     // Optional: Filter out subcategories whose category was deleted (if populate returns null)
-    const filtered = subcategories.filter(sub => sub.category_id !== null);
+    const filtered = subcategories.filter((sub) => sub.category_id !== null);
 
     res.status(200).json({ success: true, data: filtered });
   } catch (err) {
@@ -99,16 +111,10 @@ export const getSubCategoriesByCategory = async (req, res) => {
   try {
     const { category_id } = req.params;
 
-    // Validate ObjectId format (optional but safe)
-    if (!require("mongoose").Types.ObjectId.isValid(category_id)) {
-      return res.status(400).json({ success: false, message: "Invalid category ID." });
-    }
-
     const subcategories = await SubCategory.find({
       category_id: category_id,
       isDeleted: { $ne: true },
-    })
-      .sort({ name: 1 });
+    }).sort({ name: 1 });
 
     res.status(200).json({ success: true, data: subcategories });
   } catch (err) {
@@ -123,7 +129,9 @@ export const updateSubCategory = async (req, res) => {
     const { id } = req.params;
 
     if (!require("mongoose").Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ success: false, message: "Invalid subcategory ID." });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid subcategory ID." });
     }
 
     // Auto-update slug if name is provided
@@ -132,14 +140,16 @@ export const updateSubCategory = async (req, res) => {
       req.body.slug = slugify(req.body.name, { lower: true, strict: true });
     }
 
-    const subCategory = await SubCategory.findByIdAndUpdate(
-      id,
-      req.body,
-      { new: true, runValidators: true, context: 'query' }
-    );
+    const subCategory = await SubCategory.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+      context: "query",
+    });
 
     if (!subCategory) {
-      return res.status(404).json({ success: false, message: "SubCategory not found." });
+      return res
+        .status(404)
+        .json({ success: false, message: "SubCategory not found." });
     }
 
     res.status(200).json({
@@ -151,7 +161,9 @@ export const updateSubCategory = async (req, res) => {
     console.error("❌ [updateSubCategory] Error:", err);
 
     if (err.code === 11000) {
-      return res.status(400).json({ success: false, message: "Slug already exists." });
+      return res
+        .status(400)
+        .json({ success: false, message: "Slug already exists." });
     }
 
     res.status(500).json({ message: err.message });
@@ -164,7 +176,9 @@ export const deleteSubCategory = async (req, res) => {
     const { id } = req.params;
 
     if (!require("mongoose").Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ success: false, message: "Invalid subcategory ID." });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid subcategory ID." });
     }
 
     // 🔹 Soft delete (recommended if you have isDeleted field)
@@ -177,7 +191,9 @@ export const deleteSubCategory = async (req, res) => {
     // 🔹 For hard delete, use: await SubCategory.findByIdAndDelete(id);
 
     if (!deleted) {
-      return res.status(404).json({ success: false, message: "SubCategory not found." });
+      return res
+        .status(404)
+        .json({ success: false, message: "SubCategory not found." });
     }
 
     res.status(200).json({

@@ -23,7 +23,10 @@ Object.values(uploadPaths).forEach(makeDirIfNotExist);
 
 // ---------- File Filters ----------
 const imageVideoFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith("image/") || file.mimetype.startsWith("video/")) {
+  if (
+    file.mimetype.startsWith("image/") ||
+    file.mimetype.startsWith("video/")
+  ) {
     cb(null, true);
   } else {
     cb(new Error("Only image/video files are allowed"), false);
@@ -56,7 +59,9 @@ const imageFilter = (req, file, cb) => {
 // ---------- Generic Filename Generator ----------
 const uniqueName = (file) => {
   const ext = path.extname(file.originalname);
-  return `${file.fieldname}-${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+  return `${file.fieldname}-${Date.now()}-${Math.round(
+    Math.random() * 1e9
+  )}${ext}`;
 };
 
 // ---------- Storages ----------
@@ -130,5 +135,24 @@ export const uploadProduct = multer({
   storage: storages.productMedia,
   fileFilter: imageVideoFilter,
 });
+
+const uploadDir = path.join(process.cwd(), "uploads/banners");
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueName =
+      Date.now() + "-" + file.originalname.replace(/\s+/g, "_");
+    cb(null, uniqueName);
+  },
+});
+
+export const uploadBanner = multer({ storage });
 
 console.log("✅ Multer setup initialized successfully");
