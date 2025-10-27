@@ -187,7 +187,7 @@ export const updateBusinessDetails = async (req, res) => {
       ? `/uploads/vendor/${path.basename(req.files.pan_card[0].path)}`
       : vendor.pan_card;
 
-      const haspassword = hashedPassword("pankajverma!");
+      const haspassword = await hashedPassword("pankajverma");
     // Update vendor
     Object.assign(vendor, {
       name,

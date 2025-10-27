@@ -16,6 +16,7 @@ const uploadPaths = {
   subcategory: path.join(process.cwd(), "uploads", "subcategory"),
   productImages: path.join(process.cwd(), "uploads", "products", "images"),
   productVideos: path.join(process.cwd(), "uploads", "products", "videos"),
+  banner: path.join(process.cwd(), "uploads", "banners"),
 };
 
 // Ensure all folders exist
@@ -23,10 +24,7 @@ Object.values(uploadPaths).forEach(makeDirIfNotExist);
 
 // ---------- File Filters ----------
 const imageVideoFilter = (req, file, cb) => {
-  if (
-    file.mimetype.startsWith("image/") ||
-    file.mimetype.startsWith("video/")
-  ) {
+  if (file.mimetype.startsWith("image/") || file.mimetype.startsWith("video/")) {
     cb(null, true);
   } else {
     cb(new Error("Only image/video files are allowed"), false);
@@ -34,19 +32,13 @@ const imageVideoFilter = (req, file, cb) => {
 };
 
 const pdfFilter = (req, file, cb) => {
-  if (file.mimetype === "application/pdf") {
-    cb(null, true);
-  } else {
-    cb(new Error("Only PDF files are allowed"), false);
-  }
+  if (file.mimetype === "application/pdf") cb(null, true);
+  else cb(new Error("Only PDF files are allowed"), false);
 };
 
 const csvFilter = (req, file, cb) => {
-  if (path.extname(file.originalname).toLowerCase() === ".csv") {
-    cb(null, true);
-  } else {
-    cb(new Error("Only CSV files are allowed"), false);
-  }
+  if (path.extname(file.originalname).toLowerCase() === ".csv") cb(null, true);
+  else cb(new Error("Only CSV files are allowed"), false);
 };
 
 const imageFilter = (req, file, cb) => {
@@ -56,12 +48,10 @@ const imageFilter = (req, file, cb) => {
   else cb(new Error("Only .jpg, .jpeg, .png, .webp files are allowed"), false);
 };
 
-// ---------- Generic Filename Generator ----------
+// ---------- Unique Filename Generator ----------
 const uniqueName = (file) => {
   const ext = path.extname(file.originalname);
-  return `${file.fieldname}-${Date.now()}-${Math.round(
-    Math.random() * 1e9
-  )}${ext}`;
+  return `${file.fieldname}-${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
 };
 
 // ---------- Storages ----------
@@ -101,6 +91,14 @@ const storages = {
     },
     filename: (req, file, cb) => cb(null, uniqueName(file)),
   }),
+
+  banner: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadPaths.banner),
+    filename: (req, file, cb) => {
+      const name = `${Date.now()}-${file.originalname.replace(/\s+/g, "_")}`;
+      cb(null, name);
+    },
+  }),
 };
 
 // ---------- Exported Uploaders ----------
@@ -117,7 +115,7 @@ export const uploadProductMedia = multer({
 
 export const uploadCategoryImage = multer({
   storage: storages.category,
-  fileFilter: imageVideoFilter,
+  fileFilter: imageFilter,
 });
 
 export const uploadCSV = multer({
@@ -136,23 +134,27 @@ export const uploadProduct = multer({
   fileFilter: imageVideoFilter,
 });
 
-const uploadDir = path.join(process.cwd(), "uploads/banners");
-
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueName =
-      Date.now() + "-" + file.originalname.replace(/\s+/g, "_");
-    cb(null, uniqueName);
-  },
+export const uploadBanner = multer({
+  storage: storages.banner,
+  fileFilter: imageFilter,
 });
 
-export const uploadBanner = multer({ storage });
+export const uploadMultipleProducts = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadPaths.productImages),
+    filename: (req, file, cb) =>
+      cb(null, `prod-${Date.now()}-${Math.round(Math.random() * 1e9)}${path.extname(file.originalname)}`),
+  }),
+  limits: { fileSize: 10 * 1024 * 1024 },
+}).array("files", 20);
+
+// ---------- Generic Upload Controller ----------
+export const handleUpload = (req, res) => {
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ error: "No files uploaded" });
+  }
+  const urls = req.files.map((f) => `/uploads/products/images/${f.filename}`);
+  res.status(200).json({ urls });
+};
 
 console.log("✅ Multer setup initialized successfully");
