@@ -23,6 +23,12 @@ export const generateOtp = (length = 6) => {
   return otp;
 };
 
+const getBaseUrl = () => {
+  return process.env.NODE_ENV === 'production'
+    ? process.env.PROD_BASE_URL
+    : process.env.DEV_BASE_URL;
+};
+
 
 // const pagal = await  hashedPassword("pankajverma")
 // console.log("Hashed Password:", pagal);
