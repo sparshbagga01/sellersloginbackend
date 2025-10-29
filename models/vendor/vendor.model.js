@@ -34,9 +34,23 @@ const vendorSchema = new mongoose.Schema(
     // Documents
     gst_cert: { type: String }, // file path or URL
     pan_card: { type: String }, // file path or URL
+    certificates: [
+      {
+        name: String, // e.g. "certificate1"
+        file: String, // URL or path
+        issuedBy: String, // optional
+        issuedDate: Date, // optional
+      },
+    ],
 
     // Authentication
-    email: { type: String, unique: true, sparse: true, lowercase: true, trim: true },
+    email: {
+      type: String,
+      unique: true,
+      sparse: true,
+      lowercase: true,
+      trim: true,
+    },
     phone: { type: String, required: true, unique: true },
     password: { type: String },
 
@@ -52,6 +66,5 @@ const vendorSchema = new mongoose.Schema(
     timestamps: true, // adds createdAt and updatedAt
   }
 );
-
 
 export const Vendor = mongoose.model("Vendor", vendorSchema);
