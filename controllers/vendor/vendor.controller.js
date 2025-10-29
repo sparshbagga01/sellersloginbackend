@@ -3,6 +3,8 @@ import { Vendor } from "../../models/vendor/vendor.model.js";
 import { generateOtp, hashedPassword } from "../../functions/common/index.js";
 import { encodeToken } from "../../services/jwt/index.js";
 import { sendMail } from "../../services/mail/index.js";
+import mongoose from "mongoose";
+import { Product } from "../../models/product/product.model.js";
 
 
 const otpStore = new Map();
@@ -242,5 +244,43 @@ export const getVendorProfile = async (req, res) => {
   } catch (error) {
     console.error("getVendorProfile error:", error);
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
+
+
+export const getVendorWithProducts = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate vendor ID
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid vendor ID" });
+    }
+
+    // Fetch vendor details
+    const vendor = await Vendor.findById(id).select("name email logo description");
+    if (!vendor) {
+      return res.status(404).json({ message: "Vendor not found" });
+    }
+
+    // Fetch all products linked to the vendor
+    const products = await Product.find({ vendor_id: id })
+      .select("productName price default_images productCategory createdAt")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      vendor,
+      products,
+      count: products.length,
+    });
+  } catch (error) {
+    console.error("Error fetching vendor catalog:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching vendor details",
+    });
   }
 };

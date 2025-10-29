@@ -1,7 +1,7 @@
 import { Router } from "express";
 import vendorRoutes from "./vendor/vendor.routes.js";
 import productRoutes from "./vendor/product.routes.js";
-// import userRoutes from "./user/user.routes.js";
+import userRoutes from "./user/user.routes.js";
 import adminRoutes from "./admin/admin.routes.js";
 import categoryRoutes from "./admin/adminCategory.routes.js";
 // import cartRoutes from "./user/cart.routes.js";
@@ -13,13 +13,11 @@ import bannerRoutes from "./admin/banner.routes.js";
 
 const router = Router();
 
-
-
 router.use("/vendor", vendorRoutes);
 router.use("/products", productRoutes);
-// router.use("/users", userRoutes);
+router.use("/users", userRoutes);
 router.use("/admin", adminRoutes);
-router.use("/categories",categoryRoutes );
+router.use("/categories", categoryRoutes);
 router.use("/subcategories", subCategoryRoutes);
 router.use("/banners", bannerRoutes);
 // router.use("/cart",cartRoutes );
