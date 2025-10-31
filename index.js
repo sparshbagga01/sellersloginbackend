@@ -43,9 +43,12 @@ export const imagekit = new ImageKit({
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://your-production-domain.com",
-  "http://localhost:8000",
   "http://localhost:3000",
+  "http://192.168.1.20:5173",
+  "https://ophmate-admin.vercel.app",
+  "https://vendor-template.vercel.app",
+  "https://ophmate-frontend.vercel.app"
+
 ];
 
 app.use(
