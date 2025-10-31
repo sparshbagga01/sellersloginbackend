@@ -157,4 +157,4 @@ export const handleUpload = (req, res) => {
   res.status(200).json({ urls });
 };
 
-console.log("✅ Multer setup initialized successfully");
+console.log("Multer setup initialized successfully");

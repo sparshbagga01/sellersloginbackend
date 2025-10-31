@@ -8,11 +8,11 @@ export const connectDB = async () => {
 
     await mongoose.connect(MONGODB_URL);
 
-    console.log("✅ MongoDB connected successfully");
+    console.log("MongoDB connected successfully");
 
     await createAdminUser()
   } catch (err) {
-    console.error("❌ Error connecting to MongoDB:", err);
+    console.error("Error connecting to MongoDB:", err);
     process.exit(1);
   }
 };

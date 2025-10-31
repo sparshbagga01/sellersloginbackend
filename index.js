@@ -32,6 +32,7 @@ export const imagekit = new ImageKit({
   urlEndpoint: IMAGEKIT_IO_URL,
 });
 
+
 //this is upload structure of imagekit io 
 
 // const uploadResponse = await imagekit.upload({
@@ -44,6 +45,7 @@ export const imagekit = new ImageKit({
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
+  "http://localhost:3001",
   "http://192.168.1.20:5173",
   "https://ophmate-admin.vercel.app",
   "https://vendor-template.vercel.app",
