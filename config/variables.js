@@ -36,7 +36,8 @@ export const IMAGEKIT_IO_PUBLIC_KEY = "public_8KNnYtKd8fYctMGbz5oW3WLiX/M=";
 export const IMAGEKIT_IO_PRIVATE_KEY = "private_o8j13QEy53sAOOGUIkFogNH2NEg=";
 export const IMAGEKIT_IO_URL = "https://ik.imagekit.io/ivpankajoph";
 
-export const LIVE_BACKEND_URL = "https://ophmate-backend.onrender.com/";
+export const LIVE_BACKEND_URL_FREE = "https://ophmate-backend.onrender.com/";
+export const LIVE_BACKEND_URL_PROD = "https://phpstack-1522038-5968955.cloudwaysapps.com/";
 
 export const CLOUD_NAME = "diw1baz8c";
 export const API_KEY = "591284819617339";

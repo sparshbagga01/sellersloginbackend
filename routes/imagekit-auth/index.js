@@ -10,6 +10,16 @@ const imagekit = new ImageKit({
   urlEndpoint: IMAGEKIT_IO_URL,
 });
 
+
+//this is upload structure of imagekit io 
+
+// const uploadResponse = await imagekit.upload({
+//   file: imageBase64,   // required: Base64 string, URL, or file buffer
+//   fileName: fileName,  // optional but recommended
+//   folder: "/products", // optional: upload folder in ImageKit
+//   tags: ["product"],   // optional
+// });
+
 router.get("/imagekit-auth", (req, res) => {
   try {
     const authParams = imagekit.getAuthenticationParameters();

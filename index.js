@@ -5,12 +5,7 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import router from "./routes/index.js";
-import ImageKit from "imagekit";
-import {
-  IMAGEKIT_IO_PRIVATE_KEY,
-  IMAGEKIT_IO_PUBLIC_KEY,
-  IMAGEKIT_IO_URL,
-} from "./config/variables.js";
+
 
 const app = express();
 
@@ -26,22 +21,7 @@ const limiter = rateLimit({
   },
 });
 
-export const imagekit = new ImageKit({
-  publicKey: IMAGEKIT_IO_PUBLIC_KEY,
-  privateKey: IMAGEKIT_IO_PRIVATE_KEY,
-  urlEndpoint: IMAGEKIT_IO_URL,
-});
 
-
-
-//this is upload structure of imagekit io 
-
-// const uploadResponse = await imagekit.upload({
-//   file: imageBase64,   // required: Base64 string, URL, or file buffer
-//   fileName: fileName,  // optional but recommended
-//   folder: "/products", // optional: upload folder in ImageKit
-//   tags: ["product"],   // optional
-// });
 
 const allowedOrigins = [
   "http://localhost:5173",
