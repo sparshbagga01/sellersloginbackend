@@ -32,7 +32,7 @@ export const loginAdmin = async (req, res) => {
       return res.status(403).json({ message: "Access denied. Only admin or vendor can login." });
     }
 
-    console.log("User found:", user);
+    // console.log("User found:", user);
     // Check if user is verified
     if (!user.is_verified) {
         console.log("User not verified:", user.is_verified);

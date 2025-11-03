@@ -32,8 +32,8 @@ export const PG_PASS = "pankaj";
 export const PG_HOST = "localhost";
 export const PG_PORT = 5432;
 
-export const IMAGEKIT_IO_PUBLIC_KEY = "public_8KNnYtKd8fYctMGbz5oW3WLiX/M=";
-export const IMAGEKIT_IO_PRIVATE_KEY = "private_o8j13QEy53sAOOGUIkFogNH2NEg=";
+export const IMAGEKIT_PUBLIC_KEY = "public_8KNnYtKd8fYctMGbz5oW3WLiX/M=";
+export const IMAGEKIT_PRIVATE_KEY = "private_o8j13QEy53sAOOGUIkFogNH2NEg=";
 export const IMAGEKIT_IO_URL = "https://ik.imagekit.io/ivpankajoph";
 
 export const LIVE_BACKEND_URL_FREE = "https://ophmate-backend.onrender.com/";

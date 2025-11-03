@@ -11,7 +11,7 @@ import categoryRoutes from "./admin/adminCategory.routes.js";
 import subCategoryRoutes from "./admin/subcategory.routes.js";
 import bannerRoutes from "./admin/banner.routes.js";
 import templateRoutes from "./vendor-template/templateBase.routes.js"
-import imagekitRoutes from "./imagekit-auth/index.js"
+
 
 const router = Router();
 
@@ -23,7 +23,7 @@ router.use("/categories", categoryRoutes);
 router.use("/subcategories", subCategoryRoutes);
 router.use("/banners", bannerRoutes);
 router.use("/templates",templateRoutes)
-router.use("/imagekit",imagekitRoutes)
+
 // router.use("/cart",cartRoutes );
 // router.use("/wishlist",wishlistRoutes );
 // router.use("/vendor-orders",vendorOrderRoutes );
