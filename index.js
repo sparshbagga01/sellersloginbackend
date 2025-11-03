@@ -33,6 +33,7 @@ export const imagekit = new ImageKit({
 });
 
 
+
 //this is upload structure of imagekit io 
 
 // const uploadResponse = await imagekit.upload({
@@ -75,7 +76,7 @@ app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/", (req, res) => {
-  res.send("Hello, Pankaj said hi :)");
+  res.send("Helloww, Pankaj said hi :)");
 });
 
 app.use("/api", router);
