@@ -3,9 +3,10 @@ import {
   createOrUpdateAboutPage,
   createOrUpdateContactPage,
   createOrUpdateHomePage,
-  createOrUpdateSocialLinks,
+  createOrUpdateSocialLinksandFaqs,
   createTemplate,
   getaboutpage,
+  getalltemplatedata,
   getcontactpage,
   gethomepage,
 } from "../../controllers/vendor-template/templateBase.controller.js";
@@ -17,7 +18,8 @@ router.post("/", createTemplate);
 router.put("/home", createOrUpdateHomePage);
 router.put("/about", createOrUpdateAboutPage);
 router.put("/contact", createOrUpdateContactPage);
-router.put("/:templateId/social", createOrUpdateSocialLinks);
+router.put("/social-faqs", createOrUpdateSocialLinksandFaqs);
+router.get('/template-all',getalltemplatedata)
 router.get("/homepage", gethomepage);
 router.get("/contactpage", getcontactpage);
 router.get("/aboutpage", getaboutpage);

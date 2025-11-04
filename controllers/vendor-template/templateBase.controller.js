@@ -189,29 +189,78 @@ export const createOrUpdateContactPage = async (req, res) => {
   }
 };
 
-export const createOrUpdateSocialLinks = async (req, res) => {
+export const createOrUpdateSocialLinksandFaqs = async (req, res) => {
   try {
-    const { templateId } = req.params;
-    const socialData = req.body;
+    const { vendor_id, social_page } = req.body;
 
-    const updatedTemplate = await TemplateBase.findByIdAndUpdate(
-      templateId,
-      { "components.social_page": socialData },
-      { new: true, runValidators: true }
-    );
+    // Validate input
+    if (!vendor_id) {
+      return res.status(400).json({
+        success: false,
+        message: "vendor_id is required",
+      });
+    }
 
-    if (!updatedTemplate)
-      return res
-        .status(404)
-        .json({ success: false, message: "Template not found" });
+    if (!social_page) {
+      return res.status(400).json({
+        success: false,
+        message: "Social page data is required",
+      });
+    }
 
-    res
-      .status(200)
-      .json({ success: true, data: updatedTemplate.components.social_page });
+    // Find existing template by vendor_id
+    let template = await TemplateBase.findOne({ vendor_id });
+
+    if (template) {
+      // Update social page section
+      template.components.social_page = social_page;
+      await template.save();
+    } else {
+      // Create a new template if none exists
+      template = await TemplateBase.create({
+        vendor_id,
+        name: `Template for vendor ${vendor_id}`,
+        previewImage: "",
+        components: {
+          social_page,
+        },
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: template.components.social_page,
+      message: template.isNew
+        ? "Social links and FAQs created successfully"
+        : "Social links and FAQs updated successfully",
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ success: false, message: "Error updating social links", error });
+    console.error("Error in createOrUpdateSocialLinksandFaqs:", error);
+
+    // Handle Mongoose validation errors
+    if (error.name === "ValidationError") {
+      const errors = Object.values(error.errors).map((err) => err.message);
+      return res.status(400).json({
+        success: false,
+        message: "Validation error",
+        errors,
+      });
+    }
+
+    // Handle duplicate vendor_id (if unique index exists on vendor_id)
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: "A template for this vendor already exists",
+      });
+    }
+
+    // General server error
+    res.status(500).json({
+      success: false,
+      message: "Error updating social links and FAQs",
+      error: error.message,
+    });
   }
 };
 
@@ -224,6 +273,32 @@ export const createTemplate = async (req, res) => {
     res
       .status(500)
       .json({ success: false, message: "Error creating template", error });
+  }
+};
+
+export const getalltemplatedata = async (req, res) => {
+  try {
+    const { vendor_id } = req.query;
+
+    if (!vendor_id) {
+      return res.status(400).json({ message: "Vendor id is required" });
+    }
+
+    const template = await TemplateBase.findOne({ vendor_id: vendor_id });
+
+    if (!template) {
+      return res.status(404).json({ message: "Template not found" });
+    }
+
+    const homepagedata = template;
+    return res
+      .status(200)
+      .json({ message: "Data fetched successfully", data: homepagedata });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ message: "Server Error", error: error.message });
   }
 };
 

@@ -3,16 +3,6 @@ import mongoose from "mongoose";
 /* ------------------ CONTACT PAGE ------------------ */
 
 
-const faqSchema = new mongoose.Schema({
-  question: { type: String, required: true },
-  answer: { type: String, required: true },
-});
-
-const faqSectionSchema = new mongoose.Schema({
-  heading: { type: String, required: true },
-  subheading: { type: String },
-  faqs: [faqSchema],
-});
 
 const section_2Schema = new mongoose.Schema({
   hero_title: { type: String },
@@ -94,6 +84,18 @@ const homePageSchema = new mongoose.Schema({
   button_header: { type: String },
   description: descriptionSchema,
 });
+
+const faqSchema = new mongoose.Schema({
+  question: { type: String, required: true },
+  answer: { type: String, required: true },
+});
+
+const faqSectionSchema = new mongoose.Schema({
+  heading: { type: String, required: true },
+  subheading: { type: String },
+  faqs: [faqSchema],
+});
+
 
 const socialPageSchema = new mongoose.Schema({
   facebook: { type: String },
