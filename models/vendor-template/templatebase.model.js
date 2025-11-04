@@ -1,40 +1,7 @@
 import mongoose from "mongoose";
 
 /* ------------------ CONTACT PAGE ------------------ */
-const contactHeroSchema = new mongoose.Schema({
-  backgroundImage: { type: String, required: true },
-  title: { type: String, required: true },
-  subtitle: { type: String, required: true },
-});
 
-const contactInfoSchema = new mongoose.Schema({
-  icon: { type: String },
-  title: { type: String, required: true },
-  details: { type: String, required: true },
-});
-
-const formFieldSchema = new mongoose.Schema({
-  label: { type: String, required: true },
-  name: { type: String, required: true },
-  type: { type: String, default: "text" },
-  placeholder: { type: String },
-  required: { type: Boolean, default: false },
-});
-
-const contactFormSchema = new mongoose.Schema({
-  heading: { type: String, required: true },
-  description: { type: String },
-  fields: [formFieldSchema],
-  submitButtonText: { type: String, default: "Send Message" },
-});
-
-const visitInfoSchema = new mongoose.Schema({
-  heading: { type: String, required: true },
-  description: { type: String },
-  mapImage: { type: String },
-  reasonsHeading: { type: String },
-  reasonsList: [{ type: String }],
-});
 
 const faqSchema = new mongoose.Schema({
   question: { type: String, required: true },
@@ -47,47 +14,57 @@ const faqSectionSchema = new mongoose.Schema({
   faqs: [faqSchema],
 });
 
-const contactPageSchema = new mongoose.Schema({
-  hero: contactHeroSchema,
-  contactInfo: [contactInfoSchema],
-  contactForm: contactFormSchema,
-  visitInfo: visitInfoSchema,
-  faqSection: faqSectionSchema,
+const section_2Schema = new mongoose.Schema({
+  hero_title: { type: String },
+  hero_subtitle: { type: String },
+  hero_title2: { type: String },
+  hero_subtitle2: { type: String },
+  lat: { type: String },
+  long: { type: String },
 });
-
-/* ------------------ ABOUT PAGE ------------------ */
-const aboutHeroSchema = new mongoose.Schema({
+const contactHeroSchema = new mongoose.Schema({
   backgroundImage: { type: String, required: true },
   title: { type: String, required: true },
   subtitle: { type: String, required: true },
 });
+const contactPageSchema = new mongoose.Schema({
+  hero: contactHeroSchema,
+  section_2: section_2Schema,
+});
+
+/* ------------------ ABOUT PAGE ------------------ */
+const aboutHeroSchema = new mongoose.Schema({
+  backgroundImage: { type: String, required: true, default: "" },
+  title: { type: String, required: true, default: "" },
+  subtitle: { type: String, required: true, default: "" },
+});
 
 const storySectionSchema = new mongoose.Schema({
-  heading: { type: String, required: true },
-  paragraphs: [{ type: String }],
-  image: { type: String },
+  // Removed 'heading' since frontend doesn't provide it
+  paragraphs: [{ type: String, default: "" }],
+  image: { type: String, default: "" },
 });
 
 const valueSchema = new mongoose.Schema({
-  icon: { type: String },
-  title: { type: String, required: true },
-  description: { type: String, required: true },
+  icon: { type: String, default: "" },
+  title: { type: String, required: true, default: "" },
+  description: { type: String, required: true, default: "" },
 });
 
 const teamMemberSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  role: { type: String, required: true },
-  image: { type: String },
+  name: { type: String, required: true, default: "" },
+  role: { type: String, required: true, default: "" },
+  image: { type: String, default: "" },
 });
 
 const statSchema = new mongoose.Schema({
-  value: { type: String, required: true },
-  label: { type: String, required: true },
+  value: { type: String, required: true, default: "" },
+  label: { type: String, required: true, default: "" },
 });
 
 const aboutPageSchema = new mongoose.Schema({
-  hero: aboutHeroSchema,
-  story: storySectionSchema,
+  hero: { type: aboutHeroSchema, required: true },
+  story: { type: storySectionSchema, required: true },
   values: [valueSchema],
   team: [teamMemberSchema],
   stats: [statSchema],
@@ -118,18 +95,25 @@ const homePageSchema = new mongoose.Schema({
   description: descriptionSchema,
 });
 
+const socialPageSchema = new mongoose.Schema({
+  facebook: { type: String },
+  instagram: { type: String },
+  whatsapp: { type: String },
+  twitter: { type: String },
+  faqs: faqSectionSchema,
+});
 /* ------------------ TEMPLATE BASE ------------------ */
 const componentSchema = new mongoose.Schema({
-  logo: { type: String, required: true },
+  logo: { type: String },
   home_page: homePageSchema,
   about_page: aboutPageSchema,
   contact_page: contactPageSchema,
+  social_page: socialPageSchema,
 });
 
 const templateBaseSchema = new mongoose.Schema(
   {
     vendor_id: { type: String },
-    name: { type: String, required: true },
     previewImage: { type: String },
     components: componentSchema,
   },

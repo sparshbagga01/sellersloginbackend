@@ -39,8 +39,8 @@ export const IMAGEKIT_IO_URL = "https://ik.imagekit.io/ivpankajoph";
 export const LIVE_BACKEND_URL_FREE = "https://ophmate-backend.onrender.com/";
 export const LIVE_BACKEND_URL_PROD = "https://phpstack-1522038-5968955.cloudwaysapps.com/";
 
-export const CLOUD_NAME = "diw1baz8c";
-export const API_KEY = "591284819617339";
-export const API_SECRET = "XtAehaesA0ctIbQKUOAKp4R0KxY";
+export const CLOUDINARY_CLOUD_NAME = "diw1baz8c";
+export const CLOUDINARY_API_KEY = "591284819617339";
+export const CLOUDINARY_API_SECRET = "XtAehaesA0ctIbQKUOAKp4R0KxY";
 export const API_ENVIRONMENT_VARIABLES =
   "CLOUDINARY_URL=cloudinary://591284819617339:XtAehaesA0ctIbQKUOAKp4R0KxY@diw1baz8c";

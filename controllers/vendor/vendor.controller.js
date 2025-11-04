@@ -157,30 +157,45 @@ export const updateBusinessDetails = async (req, res) => {
   try {
     const { id } = req.user;
     const vendor = await Vendor.findById(id);
-    if (!vendor) return res.status(404).json({ message: "Vendor not found" });
 
+    if (!vendor) {
+      return res.status(404).json({ message: "Vendor not found" });
+    }
+
+    // Destructure incoming data
     const {
+      registrar_name,
+      email,
+      phone_no,
       name,
-      gst_number,
       business_type,
+      gst_number,
+      pan_number,
+      alternate_contact_name,
+      alternate_contact_phone,
+      address_line_1,
+      address_line_2,
+      street,
+      city,
+      state,
+      pincode,
+      country,
       bank_name,
       bank_account,
       ifsc_code,
-      pan_number,
       branch,
       upi_id,
       categories,
       return_policy,
       operating_hours,
-      address,
-      street,
-      city,
-      state,
-      pincode,
-      alternate_contact_name,
-      alternate_contact_phone,
+      established_year,
+      business_nature,
+      annual_turnover,
+      dealing_area,
+      office_employees,
     } = req.body;
 
+    // Handle file uploads (preserve old paths if not replaced)
     const gst_cert_path = req.files?.gst_cert
       ? `/uploads/vendor/${path.basename(req.files.gst_cert[0].path)}`
       : vendor.gst_cert;
@@ -189,41 +204,62 @@ export const updateBusinessDetails = async (req, res) => {
       ? `/uploads/vendor/${path.basename(req.files.pan_card[0].path)}`
       : vendor.pan_card;
 
-      const haspassword = await hashedPassword("pankajverma");
-    // Update vendor
+    // Convert categories to array if it's a comma-separated string
+    const categoryArray =
+      typeof categories === "string"
+        ? categories.split(",").map((c) => c.trim())
+        : categories;
+
+    // Optional: hash password (example, replace with real logic if needed)
+    const haspassword = await hashedPassword("pankajverma");
+
+    // Update fields
     Object.assign(vendor, {
+      registrar_name,
+      email,
+      phone: phone_no || vendor.phone,
       name,
-      gst_number,
       business_type,
-      bank_name,
-      bank_account,
-      ifsc_code,
+      gst_number,
       pan_number,
-      branch,
-      upi_id,
-      categories,
-      return_policy,
-      operating_hours,
-      address,
+      alternate_contact_name,
+      alternate_contact_phone,
+      // Combine address lines into single address field
+      address: [address_line_1, address_line_2].filter(Boolean).join(", "),
       street,
       city,
       state,
       pincode,
-      password:haspassword,
-      alternate_contact_name,
-      alternate_contact_phone,
+      country,
+      bank_name,
+      bank_account,
+      ifsc_code,
+      branch,
+      upi_id,
+      categories: categoryArray,
+      return_policy,
+      operating_hours,
+      established_year,
+      business_nature,
+      annual_turnover,
+      dealing_area,
+      office_employees,
       gst_cert: gst_cert_path,
       pan_card: pan_card_path,
+      password: haspassword,
       is_profile_completed: true,
       profile_complete_level: 100,
     });
 
     await vendor.save();
 
-    res.status(200).json({ message: "Business details updated", vendor });
+    res.status(200).json({
+      message: "Business details updated successfully",
+      vendor,
+    });
   } catch (error) {
     console.error("updateBusinessDetails error:", error);
-    res.status(500).json({ message: "Server error", error });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 

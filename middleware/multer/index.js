@@ -32,9 +32,21 @@ const imageVideoFilter = (req, file, cb) => {
 };
 
 const pdfFilter = (req, file, cb) => {
-  if (file.mimetype === "application/pdf") cb(null, true);
-  else cb(new Error("Only PDF files are allowed"), false);
+  const allowedTypes = [
+    "application/pdf",
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp"
+  ];
+
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only PDF and image files are allowed"), false);
+  }
 };
+
 
 const csvFilter = (req, file, cb) => {
   if (path.extname(file.originalname).toLowerCase() === ".csv") cb(null, true);

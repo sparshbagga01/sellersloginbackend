@@ -3,7 +3,16 @@ import mongoose from "mongoose";
 const vendorSchema = new mongoose.Schema(
   {
     // Basic Info
+    registrar_name: { type: String }, // added
     name: { type: String },
+    email: {
+      type: String,
+      unique: true,
+      sparse: true,
+      lowercase: true,
+      trim: true,
+    },
+    phone: { type: String, required: true, unique: true },
     business_type: { type: String },
     gst_number: { type: String, unique: true, sparse: true },
     pan_number: { type: String, unique: true, sparse: true },
@@ -12,12 +21,13 @@ const vendorSchema = new mongoose.Schema(
     alternate_contact_name: { type: String },
     alternate_contact_phone: { type: String },
 
-    // Address
-    address: { type: String },
+    // Address Info
+    address: { type: String }, // combined address_line_1 + address_line_2
     street: { type: String },
     city: { type: String },
     state: { type: String },
     pincode: { type: String },
+    country: { type: String, default: "India" },
 
     // Bank Details
     bank_name: { type: String },
@@ -25,6 +35,13 @@ const vendorSchema = new mongoose.Schema(
     ifsc_code: { type: String },
     branch: { type: String },
     upi_id: { type: String },
+
+    // Business Details
+    established_year: { type: String },
+    business_nature: { type: String },
+    annual_turnover: { type: String },
+    dealing_area: { type: String },
+    office_employees: { type: String },
 
     // Other Info
     categories: { type: [String] }, // store as array instead of comma-separated
@@ -36,22 +53,14 @@ const vendorSchema = new mongoose.Schema(
     pan_card: { type: String }, // file path or URL
     certificates: [
       {
-        name: String, // e.g. "certificate1"
-        file: String, // URL or path
-        issuedBy: String, // optional
-        issuedDate: Date, // optional
+        name: String,
+        file: String,
+        issuedBy: String,
+        issuedDate: Date,
       },
     ],
 
     // Authentication
-    email: {
-      type: String,
-      unique: true,
-      sparse: true,
-      lowercase: true,
-      trim: true,
-    },
-    phone: { type: String, required: true, unique: true },
     password: { type: String },
 
     // Role & Status
