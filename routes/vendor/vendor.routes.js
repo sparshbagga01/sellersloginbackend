@@ -1,13 +1,15 @@
 import express from "express";
-import { getVendorProfile, sendEmailOtp, sendPhoneOtp, updateBusinessDetails, updatePersonalDetails, verifyEmailOtp, verifyPhoneOtp } from "../../controllers/vendor/vendor.controller.js";
+import { getVendorProfile, getVendorProfilewithquery, sendEmailOtp, sendPhoneOtp, updateBusinessDetails, updatePersonalDetails, verifyEmailOtp, verifyPhoneOtp } from "../../controllers/vendor/vendor.controller.js";
 import { verifyToken, verifyVendor } from "../../services/jwt/index.js";
 import {  uploadVendorPDF } from "../../middleware/multer/index.js";
 
 
 const router = express.Router();
 
+router.get("/vendorprofile",getVendorProfilewithquery)
 router.post("/send-otp", sendPhoneOtp);
 router.post("/verify-otp", verifyPhoneOtp);
+
 
 router.use(verifyToken, verifyVendor);
 // Details update (protected)

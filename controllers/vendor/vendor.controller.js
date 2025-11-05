@@ -6,11 +6,9 @@ import { sendMail } from "../../services/mail/index.js";
 import mongoose from "mongoose";
 import { Product } from "../../models/product/product.model.js";
 
-
 const otpStore = new Map();
 const emailOtpStore = new Map();
 const OTP_EXPIRY = 5 * 60 * 1000;
-
 
 export const sendPhoneOtp = async (req, res) => {
   try {
@@ -56,7 +54,6 @@ export const verifyPhoneOtp = async (req, res) => {
   }
 };
 
-
 export const sendEmailOtp = async (req, res) => {
   try {
     const { id } = req.user;
@@ -66,7 +63,7 @@ export const sendEmailOtp = async (req, res) => {
     const user = await Vendor.findById(id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    if(user.is_profile_completed){
+    if (user.is_profile_completed) {
       return res.status(400).json({ message: "Profile already completed" });
     }
 
@@ -99,8 +96,6 @@ export const verifyEmailOtp = async (req, res) => {
 
     const user = await Vendor.findById(id);
     if (!user) return res.status(404).json({ message: "User not found" });
-
-
 
     const record = emailOtpStore.get(email);
     if (!record)
@@ -151,7 +146,6 @@ export const updatePersonalDetails = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
 
 export const updateBusinessDetails = async (req, res) => {
   try {
@@ -264,27 +258,41 @@ export const updateBusinessDetails = async (req, res) => {
 };
 
 
-export const getVendorProfile = async (req, res) => {
+export const getVendorProfilewithquery = async (req, res) => {
   try {
-    const id = req.user.id; // extracted from JWT middleware
+    const id =  req.query?.id;
+
     const vendor = await Vendor.findById(id).select("-password");
     if (!vendor) return res.status(404).json({ message: "Vendor not found" });
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Vendor profile fetched successfully",
-        vendor,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Vendor profile fetched successfully",
+      vendor,
+    });
   } catch (error) {
     console.error("getVendorProfile error:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
+export const getVendorProfile = async (req, res) => {
+  try {
+    const id = req.user?.id ?? req.query?.id;
 
+    const vendor = await Vendor.findById(id).select("-password");
+    if (!vendor) return res.status(404).json({ message: "Vendor not found" });
 
+    res.status(200).json({
+      success: true,
+      message: "Vendor profile fetched successfully",
+      vendor,
+    });
+  } catch (error) {
+    console.error("getVendorProfile error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 
 export const getVendorWithProducts = async (req, res) => {
   try {
@@ -296,7 +304,9 @@ export const getVendorWithProducts = async (req, res) => {
     }
 
     // Fetch vendor details
-    const vendor = await Vendor.findById(id).select("name email logo description");
+    const vendor = await Vendor.findById(id).select(
+      "name email logo description"
+    );
     if (!vendor) {
       return res.status(404).json({ message: "Vendor not found" });
     }
