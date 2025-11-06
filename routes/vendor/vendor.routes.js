@@ -1,5 +1,5 @@
 import express from "express";
-import { getVendorProfile, getVendorProfilewithquery, sendEmailOtp, sendPhoneOtp, updateBusinessDetails, updatePersonalDetails, verifyEmailOtp, verifyPhoneOtp } from "../../controllers/vendor/vendor.controller.js";
+import { getvendorcategory, getVendorProfile, getVendorProfilewithquery, sendEmailOtp, sendPhoneOtp, updateBusinessDetails, updatePersonalDetails, verifyEmailOtp, verifyPhoneOtp } from "../../controllers/vendor/vendor.controller.js";
 import { verifyToken, verifyVendor } from "../../services/jwt/index.js";
 import {  uploadVendorPDF } from "../../middleware/multer/index.js";
 
@@ -10,6 +10,7 @@ router.get("/vendorprofile",getVendorProfilewithquery)
 router.post("/send-otp", sendPhoneOtp);
 router.post("/verify-otp", verifyPhoneOtp);
 
+router.get("/category",getvendorcategory)
 
 router.use(verifyToken, verifyVendor);
 // Details update (protected)
@@ -26,6 +27,10 @@ router.put("/business", uploadVendorPDF.fields([
   ]), updateBusinessDetails);
 
 router.get("/profile", getVendorProfile);
+
+
+//category
+
 
 
 export default router;

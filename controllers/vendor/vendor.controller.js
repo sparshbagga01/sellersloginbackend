@@ -262,6 +262,13 @@ export const getVendorProfilewithquery = async (req, res) => {
   try {
     const id =  req.query?.id;
 
+      if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid vendor id",
+      });
+    }
+
     const vendor = await Vendor.findById(id).select("-password");
     if (!vendor) return res.status(404).json({ message: "Vendor not found" });
 
@@ -327,6 +334,45 @@ export const getVendorWithProducts = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server error while fetching vendor details",
+    });
+  }
+};
+
+
+
+//category
+
+export const getvendorcategory = async (req, res) => {
+  try {
+    const { vendor_id } = req.query;
+
+    if (!vendor_id) {
+      return res.status(400).json({ message: "vendor_id is required" });
+    }
+
+    const is_vendor_exists = await Vendor.findById(vendor_id);
+    if (!is_vendor_exists) {
+      return res.status(404).json({ message: "Vendor does not exist" });
+    }
+
+    // Fetch categories
+    const categories = await Product.find({ vendor_id })
+      .select("productCategory -_id"); // only return category field
+
+    // Extract unique categories
+    const uniqueCategories = [...new Set(categories.map(c => c.productCategory))];
+
+    return res.status(200).json({
+      success: true,
+      message: "Data fetched successfully",
+      data: uniqueCategories,
+    });
+
+  } catch (error) {
+    console.error("Error fetching vendor categories:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
     });
   }
 };
