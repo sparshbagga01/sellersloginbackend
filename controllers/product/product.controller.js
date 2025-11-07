@@ -18,7 +18,6 @@ export const createProductWithVariants = async (req, res) => {
     if (!vendorId)
       return res.status(401).json({ message: "Vendor ID missing" });
 
-    // Parse variants JSON
     let parsedVariants = [];
     try {
       parsedVariants =

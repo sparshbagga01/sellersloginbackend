@@ -25,6 +25,9 @@ const allowedOrigins = [
   "https://ophmate-admin.vercel.app",
   "https://vendor-template.vercel.app",
   "https://ophmate-frontend.vercel.app",
+  "https://ophmate-frontend-579008086831.us-central1.run.app",
+  "https://sellerslogin.com/",
+  "https://www.sellerslogin.com"
 ];
 
 // CORS
