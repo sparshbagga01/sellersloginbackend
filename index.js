@@ -17,18 +17,18 @@ const limiter = rateLimit({
   message: { status: 429, message: "Cannot hold that much load :(" },
 });
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:3000",
-  "http://localhost:3001",
-  "http://192.168.1.20:5173",
-  "https://ophmate-admin.vercel.app",
-  "https://vendor-template.vercel.app",
-  "https://ophmate-frontend.vercel.app",
-  "https://ophmate-frontend-579008086831.us-central1.run.app",
-  "https://sellerslogin.com/",
-  "https://www.sellerslogin.com"
-];
+// const allowedOrigins = [
+//   "http://localhost:5173",
+//   "http://localhost:3000",
+//   "http://localhost:3001",
+//   "http://192.168.1.20:5173",
+//   "https://ophmate-admin.vercel.app",
+//   "https://vendor-template.vercel.app",
+//   "https://ophmate-frontend.vercel.app",
+//   "https://ophmate-frontend-579008086831.us-central1.run.app",
+//   "https://sellerslogin.com/",
+//   "https://www.sellerslogin.com"
+// ];
 
 // CORS
 app.use(
