@@ -5,9 +5,14 @@ export const PORT = process.env.PORT || 8080;
 export const MONGODB_URL =
   "mongodb+srv://pankajonlineph_db_user:o9FVuSiyEmR86MCn@cluster0.tivlif3.mongodb.net/?appName=Cluster0";
 
-export const EMAIL = "ivpankaj15@gmail.com";
+// export const EMAIL = "ivpankaj15@gmail.com";
 
-export const EMAIL_PASSWORD = "hbec ahoh rpdx xrjs";
+// export const EMAIL_PASSWORD = "hbec ahoh rpdx xrjs";
+
+export const EMAIL = "pankaj@onlinepromotionhouse.com";
+
+export const EMAIL_PASSWORD = "uqThu7BENVXk";
+
 
 export const KAFKA_CLIENT_ID = "seekhley_kafka_services";
 
