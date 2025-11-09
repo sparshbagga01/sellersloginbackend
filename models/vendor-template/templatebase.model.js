@@ -13,9 +13,9 @@ const section_2Schema = new mongoose.Schema({
   long: { type: String },
 });
 const contactHeroSchema = new mongoose.Schema({
-  backgroundImage: { type: String, required: true },
-  title: { type: String, required: true },
-  subtitle: { type: String, required: true },
+  backgroundImage: { type: String,  },
+  title: { type: String,  },
+  subtitle: { type: String,  },
 });
 const contactPageSchema = new mongoose.Schema({
   hero: contactHeroSchema,
@@ -24,9 +24,9 @@ const contactPageSchema = new mongoose.Schema({
 
 /* ------------------ ABOUT PAGE ------------------ */
 const aboutHeroSchema = new mongoose.Schema({
-  backgroundImage: { type: String, required: true, default: "" },
-  title: { type: String, required: true, default: "" },
-  subtitle: { type: String, required: true, default: "" },
+  backgroundImage: { type: String, default: "" },
+  title: { type: String, default: "" },
+  subtitle: { type: String, default: "" },
 });
 
 const storySectionSchema = new mongoose.Schema({
@@ -37,24 +37,24 @@ const storySectionSchema = new mongoose.Schema({
 
 const valueSchema = new mongoose.Schema({
   icon: { type: String, default: "" },
-  title: { type: String, required: true, default: "" },
-  description: { type: String, required: true, default: "" },
+  title: { type: String, default: "" },
+  description: { type: String, default: "" },
 });
 
 const teamMemberSchema = new mongoose.Schema({
-  name: { type: String, required: true, default: "" },
-  role: { type: String, required: true, default: "" },
+  name: { type: String, default: "" },
+  role: { type: String, default: "" },
   image: { type: String, default: "" },
 });
 
 const statSchema = new mongoose.Schema({
-  value: { type: String, required: true, default: "" },
-  label: { type: String, required: true, default: "" },
+  value: { type: String,  default: "" },
+  label: { type: String,  default: "" },
 });
 
 const aboutPageSchema = new mongoose.Schema({
-  hero: { type: aboutHeroSchema, required: true },
-  story: { type: storySectionSchema, required: true },
+  hero: { type: aboutHeroSchema, },
+  story: { type: storySectionSchema, },
   values: [valueSchema],
   team: [teamMemberSchema],
   stats: [statSchema],
@@ -79,19 +79,20 @@ const descriptionSchema = new mongoose.Schema({
 });
 
 const homePageSchema = new mongoose.Schema({
-  header_text: { type: String, required: true },
-  header_text_small: { type: String, required: true },
+  header_text: { type: String, },
+  header_text_small: { type: String },
+  backgroundImage: { type: String },
   button_header: { type: String },
   description: descriptionSchema,
 });
 
 const faqSchema = new mongoose.Schema({
-  question: { type: String, required: true },
-  answer: { type: String, required: true },
+  question: { type: String,  },
+  answer: { type: String,  },
 });
 
 const faqSectionSchema = new mongoose.Schema({
-  heading: { type: String, required: true },
+  heading: { type: String },
   subheading: { type: String },
   faqs: [faqSchema],
 });
@@ -116,7 +117,8 @@ const componentSchema = new mongoose.Schema({
 const templateBaseSchema = new mongoose.Schema(
   {
     vendor_id: { type: String },
-    previewImage: { type: String },
+    business_name:{type:String},
+
     components: componentSchema,
   },
   { timestamps: true }

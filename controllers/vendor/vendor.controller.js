@@ -5,6 +5,7 @@ import { encodeToken } from "../../services/jwt/index.js";
 import { sendMail } from "../../services/mail/index.js";
 import mongoose from "mongoose";
 import { Product } from "../../models/product/product.model.js";
+import { createSampleTemplateForVendor } from "../vendor-template/templateBase.controller.js";
 
 const otpStore = new Map();
 const emailOtpStore = new Map();
@@ -246,7 +247,16 @@ export const updateBusinessDetails = async (req, res) => {
     });
 
     await vendor.save();
-
+    try {
+      console.log("🧩 Attempting to create sample template for vendor...");
+      const template = await createSampleTemplateForVendor(vendor);
+      console.log(
+        "✅ Template creation result:",
+        template ? "Created or Already Exists" : "No template returned"
+      );
+    } catch (templateError) {
+      console.error("🔥 Error during template creation:", templateError);
+    }
     res.status(200).json({
       message: "Business details updated successfully",
       vendor,
