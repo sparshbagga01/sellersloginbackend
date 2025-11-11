@@ -21,7 +21,7 @@ const productVariantSchema = new mongoose.Schema(
 
 const productSchema = new Schema(
   {
-    vendor_id: { type: String, required: true }, // assuming vendor ID is a string (UUID or ObjectId)
+    vendor_id: { type: String, required: true },
     productName: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
     productCategory: { type: String, required: true },
@@ -39,6 +39,13 @@ const productSchema = new Schema(
     },
     isAvailable: { type: Boolean, default: true },
     variants: [productVariantSchema],
+    specifications: { type: Schema.Types.Mixed, default: {} },
+    faqs: [
+      {
+        question: String,
+        answer: String,
+      },
+    ],
   },
   {
     timestamps: true,

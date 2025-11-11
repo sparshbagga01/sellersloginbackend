@@ -49,3 +49,9 @@ export const CLOUDINARY_API_KEY = "591284819617339";
 export const CLOUDINARY_API_SECRET = "XtAehaesA0ctIbQKUOAKp4R0KxY";
 export const API_ENVIRONMENT_VARIABLES =
   "CLOUDINARY_URL=cloudinary://591284819617339:XtAehaesA0ctIbQKUOAKp4R0KxY@diw1baz8c";
+
+
+
+  //gemini key
+
+export const GOOGLE_GENAI_API_KEY = "AIzaSyAb6guCCWBd4Xbb2zMDdQGookiYFGTORY8"

@@ -24,6 +24,9 @@ router.use("/subcategories", subCategoryRoutes);
 router.use("/banners", bannerRoutes);
 router.use("/templates",templateRoutes)
 router.use("/cloudinary",cloudnaryRoutes)
+
+
+
 // router.use("/cart",cartRoutes );
 // router.use("/wishlist",wishlistRoutes );
 // router.use("/vendor-orders",vendorOrderRoutes );

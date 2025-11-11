@@ -39,7 +39,6 @@ app.use(
   })
 );
 
-
 // Handle CORS errors
 app.use((err, req, res, next) => {
   if (err.message === "Not allowed by CORS") {
@@ -60,5 +59,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", router);
+
 
 export default app;

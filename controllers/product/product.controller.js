@@ -13,6 +13,8 @@ export const createProductWithVariants = async (req, res) => {
       description,
       isAvailable,
       variants,
+      specifications,
+      faqs,
     } = req.body;
     const vendorId = req.user?.user_id;
     if (!vendorId)
